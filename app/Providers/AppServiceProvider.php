@@ -19,6 +19,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->app->extend('inertia.view-finder', function ($finder, $app) {
+            $finder->addLocation(resource_path('js/waiter/Pages'));
+
+            return $finder;
+        });
     }
 }

@@ -2,11 +2,13 @@ import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import { bunny } from 'laravel-vite-plugin/fonts';
 import tailwindcss from '@tailwindcss/vite';
+import vue from '@vitejs/plugin-vue';
+import { wayfinder } from '@laravel/vite-plugin-wayfinder';
 
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
+            input: ['resources/css/app.css', 'resources/css/waiter.css', 'resources/js/app.js', 'resources/js/waiter/app.js'],
             refresh: true,
             fonts: [
                 bunny('Instrument Sans', {
@@ -15,6 +17,8 @@ export default defineConfig({
             ],
         }),
         tailwindcss(),
+        vue(),
+        wayfinder(),
     ],
     server: {
         watch: {

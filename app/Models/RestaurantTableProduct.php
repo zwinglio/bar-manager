@@ -2,11 +2,16 @@
 
 namespace App\Models;
 
+use Database\Factories\RestaurantTableProductFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class RestaurantTableProduct extends Pivot
 {
+    /** @use HasFactory<RestaurantTableProductFactory> */
+    use HasFactory;
+
     public $incrementing = true;
 
     protected $table = 'product_restaurant_table';
