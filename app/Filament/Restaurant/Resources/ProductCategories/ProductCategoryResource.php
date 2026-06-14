@@ -22,6 +22,14 @@ class ProductCategoryResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Cardápio';
+
+    protected static ?string $navigationLabel = 'Categorias';
+
+    protected static ?string $modelLabel = 'Categoria';
+
+    protected static ?string $pluralModelLabel = 'Categorias';
+
     public static function form(Schema $schema): Schema
     {
         return ProductCategoryForm::configure($schema);

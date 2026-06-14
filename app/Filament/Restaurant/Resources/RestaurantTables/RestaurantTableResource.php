@@ -22,6 +22,14 @@ class RestaurantTableResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTableCells;
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Operação';
+
+    protected static ?string $navigationLabel = 'Mesas';
+
+    protected static ?string $modelLabel = 'Mesa';
+
+    protected static ?string $pluralModelLabel = 'Mesas';
+
     public static function form(Schema $schema): Schema
     {
         return RestaurantTableForm::configure($schema);

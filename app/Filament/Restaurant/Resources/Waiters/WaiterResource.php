@@ -22,6 +22,14 @@ class WaiterResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Operação';
+
+    protected static ?string $navigationLabel = 'Garçons';
+
+    protected static ?string $modelLabel = 'Garçom';
+
+    protected static ?string $pluralModelLabel = 'Garçons';
+
     public static function form(Schema $schema): Schema
     {
         return WaiterForm::configure($schema);
