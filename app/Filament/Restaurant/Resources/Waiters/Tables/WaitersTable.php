@@ -17,21 +17,26 @@ class WaitersTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label('Nome')
                     ->searchable(),
                 TextColumn::make('username')
+                    ->label('Usuário')
                     ->searchable(),
                 IconColumn::make('is_active')
+                    ->label('Ativo')
                     ->boolean(),
                 TextColumn::make('created_at')
+                    ->label('Criado em')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('is_active')
+                    ->label('Ativo')
                     ->options([
-                        '1' => 'Active',
-                        '0' => 'Inactive',
+                        '1' => 'Ativo',
+                        '0' => 'Inativo',
                     ]),
             ])
             ->recordActions([

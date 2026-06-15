@@ -15,19 +15,23 @@ class WaiterForm
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label('Nome')
                     ->required(),
                 TextInput::make('username')
+                    ->label('Usuário')
                     ->required()
                     ->unique(
                         modifyRuleUsing: fn (Unique $rule) => $rule->where('restaurant_id', Auth::user()?->restaurant_id),
                         ignoreRecord: true,
                     ),
                 TextInput::make('password')
+                    ->label('Senha')
                     ->password()
                     ->required(fn (string $operation): bool => $operation === 'create')
                     ->dehydrated(fn ($state): bool => filled($state))
                     ->dehydrateStateUsing(fn (string $state): string => bcrypt($state)),
                 Toggle::make('is_active')
+                    ->label('Ativo')
                     ->default(true),
             ]);
     }

@@ -15,13 +15,17 @@ class ProductCategoriesTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label('Nome')
                     ->searchable(),
                 TextColumn::make('sort_order')
+                    ->label('Ordem')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('products_count')
+                    ->label('Produtos')
                     ->counts('products'),
                 TextColumn::make('created_at')
+                    ->label('Criado em')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

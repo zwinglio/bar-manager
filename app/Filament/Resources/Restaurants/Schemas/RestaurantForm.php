@@ -21,29 +21,35 @@ class RestaurantForm
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label('Nome')
                     ->required()
                     ->live(onBlur: true)
                     ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state ?? ''))),
                 TextInput::make('slug')
+                    ->label('Slug')
                     ->required()
                     ->unique(ignoreRecord: true),
                 TextInput::make('address')
+                    ->label('Endereço')
                     ->default(null),
                 TextInput::make('phone')
+                    ->label('Telefone')
                     ->default(null),
                 TextInput::make('email')
-                    ->label('Email address')
+                    ->label('E-mail')
                     ->email()
                     ->default(null),
                 Toggle::make('is_active')
+                    ->label('Ativo')
                     ->default(true),
 
-                Section::make('Restaurant admin')
+                Section::make('Administrador do restaurante')
                     ->schema([
                         ToggleButtons::make('admin_mode')
+                            ->label('Modo do administrador')
                             ->options([
-                                'existing' => 'Select existing user',
-                                'new' => 'Create new user',
+                                'existing' => 'Selecionar usuário existente',
+                                'new' => 'Criar novo usuário',
                             ])
                             ->default('new')
                             ->inline()
@@ -51,7 +57,7 @@ class RestaurantForm
                             ->dehydrated(false),
 
                         Select::make('admin_user_id')
-                            ->label('Existing admin')
+                            ->label('Administrador existente')
                             ->options(fn (?Restaurant $record): array => User::role('restaurant')
                                 ->where(fn ($query) => $query->whereNull('restaurant_id')
                                     ->when($record, fn ($query) => $query->orWhere('restaurant_id', $record->id)))
@@ -63,13 +69,13 @@ class RestaurantForm
                             ->dehydrated(false),
 
                         TextInput::make('admin_name')
-                            ->label('Admin name')
+                            ->label('Nome do administrador')
                             ->visible(fn (Get $get): bool => $get('admin_mode') === 'new')
                             ->required(fn (Get $get): bool => $get('admin_mode') === 'new')
                             ->dehydrated(false),
 
                         TextInput::make('admin_email')
-                            ->label('Admin email')
+                            ->label('E-mail do administrador')
                             ->email()
                             ->unique('users', 'email', ignoreRecord: false)
                             ->visible(fn (Get $get): bool => $get('admin_mode') === 'new')
@@ -77,7 +83,7 @@ class RestaurantForm
                             ->dehydrated(false),
 
                         TextInput::make('admin_password')
-                            ->label('Admin password')
+                            ->label('Senha do administrador')
                             ->password()
                             ->revealable()
                             ->autocomplete('new-password')

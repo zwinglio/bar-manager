@@ -21,17 +21,23 @@ class RestaurantTablesTable
         return $table
             ->columns([
                 TextColumn::make('number')
+                    ->label('Número')
                     ->sortable(),
                 TextColumn::make('name')
+                    ->label('Nome')
                     ->searchable(),
                 TextColumn::make('waiter.name')
+                    ->label('Garçom')
                     ->searchable(),
                 TextColumn::make('person_count')
+                    ->label('Quantidade de pessoas')
                     ->sortable(),
                 TextColumn::make('opened_at')
+                    ->label('Aberta em')
                     ->dateTime()
                     ->sortable(),
                 TextColumn::make('closed_at')
+                    ->label('Fechada em')
                     ->dateTime()
                     ->placeholder('—'),
                 TextColumn::make('current_total')
@@ -43,9 +49,11 @@ class RestaurantTablesTable
             ])
             ->filters([
                 Filter::make('open')
+                    ->label('Abertas')
                     ->query(fn (Builder $query): Builder => $query->whereNull('closed_at'))
                     ->toggle(),
                 SelectFilter::make('waiter_id')
+                    ->label('Garçom')
                     ->relationship('waiter', 'name')
                     ->preload(),
             ])

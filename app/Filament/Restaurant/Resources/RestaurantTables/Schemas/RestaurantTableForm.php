@@ -21,13 +21,17 @@ class RestaurantTableForm
                 Section::make('Mesa')
                     ->schema([
                         TextInput::make('number')
+                            ->label('Número')
                             ->numeric()
                             ->required(),
                         TextInput::make('name')
+                            ->label('Nome')
                             ->default(null),
                         Textarea::make('description')
+                            ->label('Descrição')
                             ->default(null),
                         TextInput::make('person_count')
+                            ->label('Quantidade de pessoas')
                             ->numeric()
                             ->default(1)
                             ->required(),
@@ -35,6 +39,7 @@ class RestaurantTableForm
                 Section::make('Atendimento')
                     ->schema([
                         Select::make('waiter_id')
+                            ->label('Garçom')
                             ->relationship(
                                 'waiter',
                                 'name',
@@ -43,9 +48,11 @@ class RestaurantTableForm
                             ->preload()
                             ->nullable(),
                         TextInput::make('opened_at')
+                            ->label('Aberta em')
                             ->default(now()->toDateTimeLocalString())
                             ->required(),
                         TextInput::make('closed_at')
+                            ->label('Fechada em')
                             ->disabled()
                             ->default(null),
                     ]),
@@ -56,6 +63,7 @@ class RestaurantTableForm
                             ->defaultItems(0)
                             ->schema([
                                 Select::make('product_id')
+                                    ->label('Produto')
                                     ->relationship(
                                         'product',
                                         'name',
@@ -69,10 +77,12 @@ class RestaurantTableForm
                                         $set('unit_price', $product?->price);
                                     }),
                                 TextInput::make('quantity')
+                                    ->label('Quantidade')
                                     ->numeric()
                                     ->default(1)
                                     ->required(),
                                 TextInput::make('unit_price')
+                                    ->label('Preço unitário')
                                     ->numeric()
                                     ->prefix('R$')
                                     ->required(),

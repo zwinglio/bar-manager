@@ -12,8 +12,10 @@ class ProductCategoryForm
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label('Nome')
                     ->required(),
                 TextInput::make('sort_order')
+                    ->label('Ordem')
                     ->numeric()
                     ->default(0),
             ]);

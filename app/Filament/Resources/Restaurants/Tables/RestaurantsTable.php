@@ -17,32 +17,40 @@ class RestaurantsTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label('Nome')
                     ->searchable(),
                 TextColumn::make('slug')
+                    ->label('Slug')
                     ->searchable(),
                 TextColumn::make('address')
+                    ->label('Endereço')
                     ->searchable(),
                 TextColumn::make('phone')
+                    ->label('Telefone')
                     ->searchable(),
                 TextColumn::make('email')
-                    ->label('Email address')
+                    ->label('E-mail')
                     ->searchable(),
                 IconColumn::make('is_active')
+                    ->label('Ativo')
                     ->boolean(),
                 TextColumn::make('created_at')
+                    ->label('Criado em')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->label('Atualizado em')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('is_active')
+                    ->label('Ativo')
                     ->options([
-                        '1' => 'Active',
-                        '0' => 'Inactive',
+                        '1' => 'Ativo',
+                        '0' => 'Inativo',
                     ]),
             ])
             ->recordActions([

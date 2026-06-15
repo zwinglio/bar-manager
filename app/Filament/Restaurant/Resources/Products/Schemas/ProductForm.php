@@ -18,9 +18,10 @@ class ProductForm
     {
         return $schema
             ->components([
-                Section::make('Details')
+                Section::make('Detalhes')
                     ->schema([
                         Select::make('product_category_id')
+                            ->label('Categoria')
                             ->relationship(
                                 'category',
                                 'name',
@@ -29,8 +30,10 @@ class ProductForm
                             ->preload()
                             ->createOptionForm([
                                 TextInput::make('name')
+                                    ->label('Nome')
                                     ->required(),
                                 TextInput::make('sort_order')
+                                    ->label('Ordem')
                                     ->numeric()
                                     ->default(0),
                             ])
@@ -40,33 +43,41 @@ class ProductForm
                                 return ProductCategory::create($data)->id;
                             }),
                         TextInput::make('name')
+                            ->label('Nome')
                             ->required(),
                         Textarea::make('description')
+                            ->label('Descrição')
                             ->default(null),
                         FileUpload::make('photo_path')
+                            ->label('Foto')
                             ->image()
                             ->directory('products')
                             ->visibility('public')
                             ->nullable(),
                     ]),
-                Section::make('Pricing')
+                Section::make('Preço')
                     ->schema([
                         TextInput::make('price')
+                            ->label('Preço')
                             ->numeric()
                             ->required()
                             ->prefix('R$'),
                         TextInput::make('cost')
+                            ->label('Custo')
                             ->numeric()
                             ->prefix('R$')
                             ->default(null),
                     ]),
-                Section::make('Visibility')
+                Section::make('Visibilidade')
                     ->schema([
                         Toggle::make('show_in_menu')
+                            ->label('Mostrar no cardápio')
                             ->default(true),
                         Toggle::make('available')
+                            ->label('Disponível')
                             ->default(true),
                         TextInput::make('sort_order')
+                            ->label('Ordem')
                             ->numeric()
                             ->default(0),
                     ]),
