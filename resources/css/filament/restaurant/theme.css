@@ -1,0 +1,363 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/Restaurant/**/*';
+@source '../../../../resources/views/filament/restaurant/**/*';
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@theme {
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+    /* Warm food-red primary */
+    --color-primary-50: #fff5f5;
+    --color-primary-100: #ffe3e3;
+    --color-primary-200: #ffc9c9;
+    --color-primary-300: #ffa8a8;
+    --color-primary-400: #ff8787;
+    --color-primary-500: #fa5252;
+    --color-primary-600: #e03131;
+    --color-primary-700: #c92a2a;
+    --color-primary-800: #a61e1e;
+    --color-primary-900: #750e0e;
+    --color-primary-950: #450a0a;
+
+    /* Warm gray for cozy feel */
+    --color-gray-50: #fafaf9;
+    --color-gray-100: #f5f5f4;
+    --color-gray-200: #e7e5e4;
+    --color-gray-300: #d6d3d1;
+    --color-gray-400: #a8a29e;
+    --color-gray-500: #78716c;
+    --color-gray-600: #57534e;
+    --color-gray-700: #44403c;
+    --color-gray-800: #292524;
+    --color-gray-900: #1c1917;
+    --color-gray-950: #0c0a09;
+
+    /* Semantic overrides for appetite colors */
+    --color-danger-50: #fff5f5;
+    --color-danger-100: #ffe3e3;
+    --color-danger-200: #ffc9c9;
+    --color-danger-300: #ffa8a8;
+    --color-danger-400: #ff8787;
+    --color-danger-500: #fa5252;
+    --color-danger-600: #e03131;
+    --color-danger-700: #c92a2a;
+    --color-danger-800: #a61e1e;
+    --color-danger-900: #750e0e;
+    --color-danger-950: #450a0a;
+
+    --color-warning-50: #fffbeb;
+    --color-warning-100: #fef3c7;
+    --color-warning-200: #fde68a;
+    --color-warning-300: #fcd34d;
+    --color-warning-400: #fbbf24;
+    --color-warning-500: #f59e0b;
+    --color-warning-600: #d97706;
+    --color-warning-700: #b45309;
+    --color-warning-800: #92400e;
+    --color-warning-900: #78350f;
+    --color-warning-950: #451a03;
+
+    --color-success-50: #f0fdf4;
+    --color-success-100: #dcfce7;
+    --color-success-200: #bbf7d0;
+    --color-success-300: #86efac;
+    --color-success-400: #4ade80;
+    --color-success-500: #22c55e;
+    --color-success-600: #16a34a;
+    --color-success-700: #15803d;
+    --color-success-800: #166534;
+    --color-success-900: #14532d;
+    --color-success-950: #052e16;
+
+    --color-info-50: #fff8f1;
+    --color-info-100: #ffefd4;
+    --color-info-200: #ffdbb2;
+    --color-info-300: #ffc28a;
+    --color-info-400: #ffa05c;
+    --color-info-500: #f57f3d;
+    --color-info-600: #e8590c;
+    --color-info-700: #d14e0b;
+    --color-info-800: #a33d08;
+    --color-info-900: #6d2805;
+    --color-info-950: #3d1402;
+}
+
+:root {
+    --radius-md: 0.375rem;
+    --radius-lg: 0.5rem;
+    --default-transition-duration: .15s;
+}
+
+/* ========== Layout ========== */
+.fi-body {
+    @apply bg-gray-50 dark:bg-gray-950;
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+.fi-main {
+    @apply bg-gray-50 dark:bg-gray-950;
+}
+
+/* ========== Topbar ========== */
+.fi-topbar {
+    @apply bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800;
+    box-shadow: inset 0 -1px 0 0 rgba(0, 0, 0, 0.05);
+}
+
+.fi-topbar-item-button {
+    @apply text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md;
+}
+
+/* ========== Sidebar ========== */
+.fi-sidebar {
+    @apply bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800;
+    box-shadow: inset -1px 0 0 0 rgba(0, 0, 0, 0.05);
+}
+
+.fi-sidebar-group {
+    @apply text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500;
+}
+
+.fi-sidebar-item-button {
+    @apply rounded-md text-sm font-medium text-gray-600 dark:text-gray-400
+           hover:bg-gray-100 hover:text-gray-800
+           dark:hover:bg-gray-800 dark:hover:text-gray-200
+           transition-colors duration-150;
+}
+
+.fi-sidebar-item-button.fi-active,
+.fi-sidebar-item-active .fi-sidebar-item-button {
+    @apply bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400;
+}
+
+.fi-sidebar-item-button .fi-sidebar-item-icon {
+    @apply text-gray-400 dark:text-gray-500;
+}
+
+.fi-sidebar-item-button.fi-active .fi-sidebar-item-icon,
+.fi-sidebar-item-active .fi-sidebar-item-button .fi-sidebar-item-icon {
+    @apply text-primary-600 dark:text-primary-400;
+}
+
+.fi-sidebar-collapse-button {
+    @apply bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800;
+}
+
+/* ========== Sections / Cards ========== */
+.fi-section {
+    @apply bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-none;
+}
+
+.fi-section-header {
+    @apply border-b border-gray-100 dark:border-gray-800 px-6 py-5;
+}
+
+.fi-section-header-heading {
+    @apply text-base font-semibold text-gray-800 dark:text-gray-100;
+}
+
+.fi-section-content {
+    @apply p-6;
+}
+
+/* ========== Widgets / Stats ========== */
+.fi-wi-stats-overview-stat {
+    @apply bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-none;
+}
+
+.fi-wi-chart {
+    @apply bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-none;
+}
+
+/* ========== Tables (much less dense) ========== */
+.fi-ta-ctn {
+    @apply bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-none overflow-hidden;
+}
+
+.fi-ta-header {
+    @apply bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-800 px-6 py-4;
+}
+
+.fi-ta-header-heading {
+    @apply text-sm font-semibold text-gray-700 dark:text-gray-300;
+}
+
+.fi-ta-record {
+    @apply transition-colors duration-150;
+}
+
+.fi-ta-record:hover {
+    @apply bg-gray-50 dark:bg-gray-800/50;
+}
+
+.fi-ta-cell {
+    @apply text-sm text-gray-600 dark:text-gray-400 px-6 border-b border-gray-100 dark:border-gray-800;
+    padding-top: 0.25rem !important;
+    padding-bottom: 0.25rem !important;
+}
+
+.fi-ta-cell-heading {
+    @apply text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/50 px-6 border-b border-gray-200 dark:border-gray-800;
+    padding-top: 0.375rem !important;
+    padding-bottom: 0.375rem !important;
+}
+
+/* Bulk actions bar */
+.fi-ta-bulk-actions-bar {
+    @apply px-6 py-3;
+}
+
+/* Make checkbox column less cramped */
+.fi-ta-cell:first-child,
+.fi-ta-cell-heading:first-child {
+    @apply w-14 min-w-14;
+}
+
+/* ========== Forms / Inputs ========== */
+.fi-fo-component-ctn {
+    @apply gap-1.5;
+}
+
+.fi-input,
+.fi-select-input,
+.fi-textarea {
+    @apply bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md text-sm text-gray-900 dark:text-gray-100
+           placeholder:text-gray-400 dark:placeholder:text-gray-500
+           focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:outline-none
+           transition-all duration-150;
+}
+
+.fi-input-wrapper {
+    @apply bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md
+           focus-within:border-primary-500 focus-within:ring-2 focus-within:ring-primary-500/20;
+}
+
+.fi-fo-field-wrp-label {
+    @apply text-sm font-medium text-gray-700 dark:text-gray-300;
+}
+
+.fi-fo-field-wrp-hint {
+    @apply text-xs text-gray-500 dark:text-gray-500;
+}
+
+.fi-fo-field-wrp-error-msg {
+    @apply text-xs text-danger-600 dark:text-danger-400;
+}
+
+.fi-checkbox-input,
+.fi-radio-input {
+    @apply border-gray-300 dark:border-gray-600 text-primary-600 focus:ring-primary-500/20 rounded;
+}
+
+/* ========== Buttons (careful contrast) ========== */
+.fi-btn {
+    @apply rounded-md text-sm font-medium transition-all duration-150 focus:ring-2 focus:ring-offset-0;
+}
+
+.fi-btn-primary {
+    @apply bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500/30
+           dark:bg-primary-600 dark:hover:bg-primary-500;
+}
+
+.fi-btn-secondary,
+.fi-btn-gray {
+    @apply bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700
+           hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-gray-500/20;
+}
+
+.fi-btn-danger {
+    @apply bg-danger-600 text-white hover:bg-danger-700 focus:ring-danger-500/30;
+}
+
+.fi-btn-success {
+    @apply bg-success-600 text-white hover:bg-success-700 focus:ring-success-500/30;
+}
+
+/* Warning uses dark text for contrast on yellow */
+.fi-btn-warning {
+    @apply bg-warning-400 text-gray-900 hover:bg-warning-500 focus:ring-warning-500/30;
+}
+
+/* Info uses dark text for contrast on orange */
+.fi-btn-info {
+    @apply bg-info-400 text-gray-900 hover:bg-info-500 focus:ring-info-500/30;
+}
+
+.fi-btn-link {
+    @apply text-primary-700 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300;
+}
+
+/* ========== Actions / Dropdowns ========== */
+.fi-dropdown-panel {
+    @apply bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg shadow-gray-900/5;
+}
+
+.fi-dropdown-list-item {
+    @apply text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800;
+}
+
+/* ========== Modals ========== */
+.fi-modal-window {
+    @apply bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-xl;
+}
+
+.fi-modal-header {
+    @apply border-b border-gray-100 dark:border-gray-800 px-6 py-4;
+}
+
+.fi-modal-heading {
+    @apply text-lg font-semibold text-gray-900 dark:text-white;
+}
+
+.fi-modal-footer {
+    @apply border-t border-gray-100 dark:border-gray-800 px-6 py-4;
+}
+
+/* ========== Pagination ========== */
+.fi-pagination-item-button {
+    @apply text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md;
+}
+
+.fi-pagination-item-button.fi-active {
+    @apply bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400 font-medium;
+}
+
+/* ========== Badges / Tags ========== */
+.fi-badge {
+    @apply text-xs font-medium rounded-md px-2.5 py-1;
+}
+
+/* ========== Tabs ========== */
+.fi-tabs-item {
+    @apply text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200
+           border-b-2 border-transparent px-4 py-3 transition-colors duration-150;
+}
+
+.fi-tabs-item.fi-active {
+    @apply text-primary-700 dark:text-primary-400 border-primary-600 dark:border-primary-400;
+}
+
+/* ========== Notifications / Toasts ========== */
+.fi-notification {
+    @apply bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-lg shadow-gray-900/5;
+}
+
+/* ========== Empty state ========== */
+.fi-empty-state {
+    @apply text-gray-500 dark:text-gray-400;
+}
+
+.fi-empty-state-icon {
+    @apply text-gray-300 dark:text-gray-600;
+}
+
+/* ========== Breadcrumbs ========== */
+.fi-breadcrumbs-item {
+    @apply text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200;
+}
+
+.fi-breadcrumbs-separator {
+    @apply text-gray-300 dark:text-gray-600;
+}

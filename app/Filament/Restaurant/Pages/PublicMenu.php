@@ -40,7 +40,7 @@ class PublicMenu extends Page
         $url = $this->getPublicMenuUrl();
 
         return $url
-            ? QrCode::size(256)->generate($url)
+            ? QrCode::size(300)->generate($url)
             : '';
     }
 

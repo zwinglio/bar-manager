@@ -26,10 +26,11 @@ class RestaurantPanelProvider extends PanelProvider
         return $panel
             ->id('restaurant')
             ->path('restaurant')
+            ->viteTheme('resources/css/filament/restaurant/theme.css')
             ->brandName('Gerenciamento do Restaurante')
             ->login()
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Red,
             ])
             ->discoverResources(in: app_path('Filament/Restaurant/Resources'), for: 'App\Filament\Restaurant\Resources')
             ->discoverPages(in: app_path('Filament/Restaurant/Pages'), for: 'App\Filament\Restaurant\Pages')
