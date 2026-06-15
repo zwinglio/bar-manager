@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Restaurant;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PublicMenuController extends Controller
 {
@@ -29,5 +32,25 @@ class PublicMenuController extends Controller
             'restaurant' => $restaurant,
             'categories' => $categories,
         ]);
+    }
+
+    public function downloadQr(Restaurant $restaurant): StreamedResponse
+    {
+        abort_unless(
+            Auth::user()?->restaurant_id === $restaurant->id,
+            403,
+        );
+
+        $url = route('menu.public', ['restaurant' => $restaurant->slug]);
+        $fileName = 'qr-cardapio-'.($restaurant->slug ?? 'restaurante').'.png';
+
+        $png = QrCode::format('png')
+            ->size(512)
+            ->margin(2)
+            ->generate($url);
+
+        return response()->streamDownload(function () use ($png): void {
+            echo $png;
+        }, $fileName, ['Content-Type' => 'image/png']);
     }
 }

@@ -7,7 +7,6 @@ use Filament\Actions\Action;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Auth;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PublicMenu extends Page
 {
@@ -49,24 +48,18 @@ class PublicMenu extends Page
      */
     protected function getHeaderActions(): array
     {
+        $restaurant = $this->getRestaurant();
+
         return [
             Action::make('downloadQr')
                 ->label('Baixar QR Code')
                 ->icon('heroicon-o-arrow-down-tray')
-                ->action(function (): StreamedResponse {
-                    $url = $this->getPublicMenuUrl();
-                    $restaurant = $this->getRestaurant();
-                    $fileName = 'qr-cardapio-'.($restaurant?->slug ?? 'restaurante').'.png';
-
-                    $png = QrCode::format('png')
-                        ->size(512)
-                        ->margin(2)
-                        ->generate($url);
-
-                    return response()->streamDownload(function () use ($png): void {
-                        echo $png;
-                    }, $fileName, ['Content-Type' => 'image/png']);
-                }),
+                ->url(
+                    $restaurant
+                        ? route('restaurant.menu.qr-download', ['restaurant' => $restaurant])
+                        : null,
+                )
+                ->openUrlInNewTab(),
         ];
     }
 }
