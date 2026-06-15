@@ -1,3 +1,45 @@
+<project-context>
+=== project context ===
+
+# Sistema de Gerenciamento de Bares e Restaurantes
+
+This application is a bar/restaurant management system with three distinct interfaces:
+
+1. **Admin Panel** (`/admin`) — Filament panel for system administrators to manage restaurants and users.
+2. **Restaurant Panel** (`/restaurant`) — Filament panel for restaurant owners to manage their tables, products, categories, and waiters.
+3. **Waiter Interface** (`/waiter/{restaurant-slug}`) — Vue 3 + Vuetify mobile interface for waiters to open tables, take orders, and close accounts.
+
+## Domain Models
+
+- `User` — Admins and restaurant owners (Spatie roles: `admin`, `restaurant`). Implements `FilamentUser`.
+- `Restaurant` — The restaurant entity with name, address, phone, email, and active status.
+- `Product` — Menu items with photo, price, cost, availability, and sort order.
+- `ProductCategory` — Menu categories (e.g., Bebidas, Porções).
+- `RestaurantTable` — Tables with open/close tracking (`opened_at`, `closed_at`), total, and person count. Related to `Waiter`.
+- `RestaurantTableProduct` — Pivot table for products on a table, storing `quantity` and `unit_price`.
+- `Waiter` — Separate authentication model for waiters (not `User`). Belongs to a `Restaurant`.
+
+## Auth & Authorization
+
+- `User` uses Spatie Laravel Permission (`HasRoles`). Roles: `admin` (accesses `/admin`), `restaurant` (accesses `/restaurant`).
+- `Waiter` is a separate `Authenticatable` model with its own login at `/waiter/{slug}/login`.
+- Restaurant panel resources use `->tenant()` or scope queries to the authenticated user's restaurant.
+
+## Frontend Stacks
+
+- **Filament panels:** Livewire + Tailwind CSS v4.
+- **Waiter interface:** Vue 3 + Inertia.js + Vuetify 4 with Material Design 3. Located in `resources/js/waiter/` and `resources/views/waiter.blade.php`.
+
+## Routing
+
+- Filament panels handle their own auth and routing.
+- Waiter routes are in `routes/waiter.php`, prefixed with `/waiter/{restaurant:slug}`, and use `HandleInertiaRequests` middleware.
+
+## Language
+
+All UI labels and Filament resources are in Portuguese (pt_BR).
+</project-context>
+
 <laravel-boost-guidelines>
 === foundation rules ===
 

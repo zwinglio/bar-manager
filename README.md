@@ -1,58 +1,141 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistema de Gerenciamento de Bares e Restaurantes
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplicativo web para gerenciamento de bares e restaurantes, com painel administrativo, painel para donos de restaurante e interface mobile para garçons.
 
-## About Laravel
+## Tecnologias
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Backend:** PHP 8.4, Laravel 13, Filament v5, Livewire v4
+- **Frontend Admin:** Filament + Tailwind CSS v4
+- **Frontend Garçom:** Vue 3, Inertia.js, Vuetify 4, Material Design 3
+- **Banco de dados:** SQLite (padrão)
+- **Autenticação:** Laravel Auth + Spatie Laravel Permission
+- **Ferramentas:** Laravel Pint, PHPUnit 12, Laravel Boost
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Estrutura do Sistema
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+O sistema possui três interfaces principais:
 
-## Learning Laravel
+### 1. Painel Administrativo (`/admin`)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Painel Filament para administradores do sistema.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Gerenciamento de restaurantes
+- Gerenciamento de usuários (administradores e donos de restaurante)
+- Controle de acesso via papéis (roles) `admin` e `restaurant`
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+### 2. Painel do Restaurante (`/restaurant`)
 
-## Agentic Development
+Painel Filament exclusivo para o dono do restaurante autenticado.
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+- **Mesas:** Cadastro e controle de mesas do restaurante
+- **Produtos:** Cardápio com categorias, fotos, preços, custos e disponibilidade
+- **Categorias:** Organização do cardápio em categorias
+- **Garçons:** Cadastro de garçons com credenciais de acesso à interface mobile
+- **Controle de mesas:** Abertura/fechamento de mesas e acompanhamento de pedidos
+
+### 3. Interface do Garçom (`/waiter/{restaurant-slug}`)
+
+Interface mobile desenvolvida com Vue 3 + Vuetify para uso dos garçons.
+
+- Login com usuário e senha
+- Visualização de todas as mesas do restaurante
+- Abertura de novas mesas (informando número de pessoas)
+- Adição e remoção de produtos à mesa
+- Acompanhamento do total em tempo real
+- Fechamento da conta
+
+## Modelos Principais
+
+| Modelo | Descrição |
+|--------|-----------|
+| `User` | Administradores e donos de restaurante (autenticação Filament) |
+| `Restaurant` | Dados do restaurante (nome, endereço, telefone, etc.) |
+| `Product` | Itens do cardápio (nome, descrição, foto, preço, custo) |
+| `ProductCategory` | Categorias do cardápio (ex: Bebidas, Porções, etc.) |
+| `RestaurantTable` | Mesas do restaurante com controle de abertura/fechamento |
+| `RestaurantTableProduct` | Itens pedidos em uma mesa (quantidade, preço unitário) |
+| `Waiter` | Garçons com autenticação independente para a interface mobile |
+
+## Requisitos
+
+- PHP >= 8.3
+- Composer
+- Node.js / Bun
+- SQLite (ou outro banco configurado no `.env`)
+
+## Instalação
 
 ```bash
-composer require laravel/boost --dev
+# Clone o repositório
+git clone <repo-url>
+cd bar-management-filament
 
-php artisan boost:install
+# Instale as dependências PHP
+composer install
+
+# Configure o ambiente
+cp .env.example .env
+php artisan key:generate
+
+# Execute as migrations
+php artisan migrate
+
+# Instale as dependências frontend
+npm install
+
+# Compile os assets
+npm run build
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Ou utilize o script de setup do Composer:
 
-## Contributing
+```bash
+composer run setup
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Desenvolvimento
 
-## Code of Conduct
+```bash
+# Inicie o servidor de desenvolvimento completo
+composer run dev
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Este comando inicia simultaneamente:
+- Servidor PHP (`php artisan serve`)
+- Worker de filas (`php artisan queue:listen`)
+- Logs em tempo real (`php artisan pail`)
+- Vite dev server (`npm run dev`)
 
-## Security Vulnerabilities
+## Testes
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+# Execute todos os testes
+php artisan test --compact
 
-## License
+# Execute um teste específico
+php artisan test --compact --filter=nomeDoTeste
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Rotas Principais
+
+| Rota | Descrição |
+|------|-----------|
+| `/admin` | Painel administrativo (role: admin) |
+| `/admin/login` | Login do administrador |
+| `/restaurant` | Painel do restaurante (role: restaurant) |
+| `/restaurant/login` | Login do dono do restaurante |
+| `/waiter/{restaurant}` | Login da interface do garçom |
+| `/waiter/{restaurant}/tables` | Lista de mesas (garçom autenticado) |
+| `/waiter/{restaurant}/tables/{id}` | Detalhes e pedidos de uma mesa |
+
+## Principais Funcionalidades
+
+- **Multi-tenant:** Cada restaurante gerencia apenas seus próprios dados
+- **Autenticação em camadas:** Admin, dono de restaurante e garçom com sistemas de auth separados
+- **Interface mobile otimizada:** Design responsivo com Material Design 3 para uso em tablets e smartphones
+- **Controle de estoque:** Produtos com marcação de disponibilidade e custo
+- **Acompanhamento de vendas:** Total por mesa e histórico de fechamentos
+
+## Licença
+
+MIT
