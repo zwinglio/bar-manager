@@ -38,22 +38,22 @@
             </div>
 
             <!-- Pill tabs -->
-            <div class="d-flex gap-2 mb-4">
+            <div class="d-flex ga-3 mb-4">
                 <v-btn
                     v-for="tab in tabs"
                     :key="tab.value"
                     :variant="scope === tab.value ? 'flat' : 'tonal'"
                     :color="scope === tab.value ? 'primary' : 'on-surface'"
                     rounded="pill"
-                    size="small"
-                    class="text-none flex-grow-1"
+                    size="large"
+                    class="text-none flex-grow-1 px-4"
                     @click="changeScope(tab.value)"
                 >
                     <span class="font-weight-medium">{{ tab.label }}</span>
                     <v-chip
                         v-if="scope === tab.value && tables.length > 0"
                         color="white"
-                        size="x-small"
+                        size="small"
                         class="ml-2 font-weight-bold"
                         label
                     >
