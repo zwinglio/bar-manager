@@ -1,102 +1,111 @@
 <template>
     <WaiterLayout>
-        <v-container>
-            <div class="d-flex align-center justify-space-between mb-4">
-                <h1 class="text-h6 font-weight-bold">
-                    Boa noite, {{ waiter.name }}
-                </h1>
-                <v-btn
-                    variant="text"
-                    size="small"
-                    :loading="logoutForm.processing"
-                    @click="logout"
-                >
-                    Sair
-                </v-btn>
+        <v-container class="px-4 pt-4">
+            <!-- Header -->
+            <div class="d-flex align-center justify-space-between mb-6">
+                <div>
+                    <h1 class="text-h6 font-weight-bold text-on-surface">
+                        Boa noite, {{ waiter.name }}
+                    </h1>
+                </div>
+                <div class="d-flex align-center gap-2">
+                    <v-avatar
+                        color="primary"
+                        size="36"
+                        class="text-white text-caption font-weight-bold"
+                    >
+                        {{ initials(waiter.name) }}
+                    </v-avatar>
+                    <v-btn
+                        icon="mdi-bell-outline"
+                        variant="text"
+                        density="comfortable"
+                        color="on-surface"
+                        class="ml-2"
+                    />
+                    <v-btn
+                        variant="text"
+                        size="small"
+                        density="comfortable"
+                        color="on-surface"
+                        :loading="logoutForm.processing"
+                        class="ml-1"
+                        @click="logout"
+                    >
+                        Sair
+                    </v-btn>
+                </div>
             </div>
 
-            <v-btn-toggle
-                v-model="scope"
-                mandatory
-                divided
-                class="mb-4 w-100"
-                @update:model-value="changeScope"
-            >
-                <v-btn value="mine" class="flex-grow-1">Minhas</v-btn>
-                <v-btn value="all" class="flex-grow-1">Todas</v-btn>
-                <v-btn value="closed" class="flex-grow-1">Fechadas</v-btn>
-            </v-btn-toggle>
+            <!-- Pill tabs -->
+            <div class="d-flex gap-2 mb-4">
+                <v-btn
+                    v-for="tab in tabs"
+                    :key="tab.value"
+                    :variant="scope === tab.value ? 'flat' : 'tonal'"
+                    :color="scope === tab.value ? 'primary' : 'on-surface'"
+                    rounded="pill"
+                    size="small"
+                    class="text-none flex-grow-1"
+                    @click="changeScope(tab.value)"
+                >
+                    <span class="font-weight-medium">{{ tab.label }}</span>
+                    <v-chip
+                        v-if="scope === tab.value && tables.length > 0"
+                        color="white"
+                        size="x-small"
+                        class="ml-2 font-weight-bold"
+                        label
+                    >
+                        {{ tables.length }}
+                    </v-chip>
+                </v-btn>
+            </div>
 
             <v-empty-state
                 v-if="tables.length === 0"
                 :headline="scope === 'closed' ? 'Nenhuma mesa fechada.' : 'Nenhuma mesa aberta.'"
             />
 
-            <v-list v-else lines="two" class="pa-0">
-                <Link
+            <div v-else>
+                <TableCard
                     v-for="table in tables"
                     :key="table.id"
-                    :href="route('waiter.tables.show', { restaurant: restaurant.slug, table: table.id })"
+                    :table="table"
+                    :restaurant-slug="restaurant.slug"
+                    :scope="scope"
+                />
+            </div>
+
+            <!-- Sticky bottom CTA -->
+            <div
+                v-if="scope !== 'closed'"
+                class="sticky-bottom pa-4"
+                style="position: sticky; bottom: 0; z-index: 10;"
+            >
+                <Link
+                    :href="route('waiter.tables.create', { restaurant: restaurant.slug })"
                     class="text-decoration-none"
                 >
-                    <v-list-item link class="px-0">
-                        <template #title>
-                            <span class="font-weight-bold">
-                                Mesa {{ table.number }}
-                                <span v-if="table.name" class="font-weight-regular text-medium-emphasis"> — {{ table.name }}</span>
-                            </span>
-                        </template>
-
-                        <template #subtitle>
-                            <div>
-                                {{ table.person_count }} pessoas &middot; {{ table.item_count }} itens
-                                <span v-if="scope === 'closed' && table.closed_at">
-                                    &middot; {{ closedAtLabel(table.closed_at) }}
-                                </span>
-                                <span v-else>
-                                    &middot; {{ elapsed(table.opened_at) }}
-                                </span>
-                            </div>
-                            <div v-if="(scope === 'all' || scope === 'closed') && table.waiter_name" class="text-caption text-disabled">
-                                {{ table.waiter_name }}
-                            </div>
-                        </template>
-
-                        <template #append>
-                            <div class="text-right">
-                                <v-chip
-                                    size="small"
-                                    :color="scope === 'closed' ? 'default' : 'success'"
-                                    class="mb-1"
-                                >
-                                    {{ scope === 'closed' ? 'Fechada' : 'Aberta' }}
-                                </v-chip>
-                                <div class="text-body-2 font-weight-bold">
-                                    R$ {{ table.total }}
-                                </div>
-                            </div>
-                        </template>
-                    </v-list-item>
+                    <v-btn
+                        color="primary"
+                        block
+                        size="large"
+                        prepend-icon="mdi-plus"
+                    >
+                        Abrir mesa
+                    </v-btn>
                 </Link>
-            </v-list>
-
-            <Link
-                v-if="scope !== 'closed'"
-                :href="route('waiter.tables.create', { restaurant: restaurant.slug })"
-                class="text-decoration-none"
-            >
-                <v-btn color="primary" block class="mt-6">
-                    + Abrir mesa
-                </v-btn>
-            </Link>
+            </div>
         </v-container>
     </WaiterLayout>
 </template>
 
 <script setup>
-import { Link, useForm } from '@inertiajs/vue3';
+import { Link, router, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import WaiterLayout from '../../Layouts/WaiterLayout.vue';
+import TableCard from '../../components/TableCard.vue';
 
 const props = defineProps({
     restaurant: Object,
@@ -107,6 +116,12 @@ const props = defineProps({
 
 const scope = ref(props.scope);
 
+const tabs = [
+    { value: 'mine', label: 'Abertas' },
+    { value: 'all', label: 'Todas' },
+    { value: 'closed', label: 'Fechadas' },
+];
+
 const logoutForm = useForm({});
 
 function logout() {
@@ -115,23 +130,19 @@ function logout() {
 
 function changeScope(newScope) {
     scope.value = newScope;
-    const url = route('waiter.tables.index', { restaurant: props.restaurant.slug, scope: newScope });
-    window.location.href = url;
+    router.get(route('waiter.tables.index', { restaurant: props.restaurant.slug, scope: newScope }));
 }
 
-function elapsed(iso) {
-    if (!iso) return '';
-    const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
-    if (diff < 1) return 'aberta agora';
-    if (diff < 60) return `${diff}min`;
-    const hours = Math.floor(diff / 60);
-    const mins = diff % 60;
-    return `${hours}h ${mins}min`;
-}
+function initials(name) {
+    if (!name) {
+        return '';
+    }
 
-function closedAtLabel(iso) {
-    if (!iso) return '';
-    const date = new Date(iso);
-    return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+    return name
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
 }
 </script>
