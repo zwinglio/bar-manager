@@ -51,6 +51,7 @@ class ProductForm
                         FileUpload::make('photo_path')
                             ->label('Foto')
                             ->image()
+                            ->disk('public')
                             ->directory('products')
                             ->visibility('public')
                             ->nullable(),

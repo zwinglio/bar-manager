@@ -13,6 +13,8 @@ use Database\Seeders\RoleSeeder;
 use Filament\Actions\DeleteAction;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -63,6 +65,34 @@ class ProductResourceTest extends TestCase
             'restaurant_id' => $user->restaurant_id,
             'product_category_id' => $category->id,
         ]);
+    }
+
+    public function test_can_upload_product_photo(): void
+    {
+        Storage::fake('public');
+        $user = User::factory()->restaurant()->withRestaurant()->create();
+        $category = ProductCategory::factory()->create(['restaurant_id' => $user->restaurant_id]);
+        $file = UploadedFile::fake()->image('photo.jpg');
+
+        Livewire::actingAs($user)
+            ->test(CreateProduct::class)
+            ->fillForm([
+                'product_category_id' => $category->id,
+                'name' => 'Caipirinha',
+                'description' => 'Classic Brazilian cocktail',
+                'price' => 25.90,
+                'cost' => 8.50,
+                'photo_path' => $file,
+                'show_in_menu' => true,
+                'available' => true,
+                'sort_order' => 1,
+            ])
+            ->call('create')
+            ->assertHasNoFormErrors();
+
+        $product = Product::where('name', 'Caipirinha')->first();
+        $this->assertNotNull($product->photo_path);
+        Storage::disk('public')->assertExists($product->photo_path);
     }
 
     public function test_name_and_price_are_required_on_create(): void
