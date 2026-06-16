@@ -5,12 +5,14 @@ namespace Tests\Feature\Filament;
 use App\Filament\Restaurant\Resources\Products\Pages\CreateProduct;
 use App\Filament\Restaurant\Resources\Products\Pages\EditProduct;
 use App\Filament\Restaurant\Resources\Products\Pages\ListProducts;
+use App\Filament\Restaurant\Resources\Products\RelationManagers\SameCategoryProductsRelationManager;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\Restaurant;
 use App\Models\User;
 use Database\Seeders\RoleSeeder;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\Testing\TestAction;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -167,5 +169,74 @@ class ProductResourceTest extends TestCase
             ->test(ListProducts::class)
             ->assertCanSeeTableRecords([$productA])
             ->assertCanNotSeeTableRecords([$productB]);
+    }
+
+    public function test_create_redirects_to_index(): void
+    {
+        $user = User::factory()->restaurant()->withRestaurant()->create();
+        $category = ProductCategory::factory()->create(['restaurant_id' => $user->restaurant_id]);
+
+        Livewire::actingAs($user)
+            ->test(CreateProduct::class)
+            ->fillForm([
+                'product_category_id' => $category->id,
+                'name' => 'Test Product',
+                'price' => 10.00,
+            ])
+            ->call('create')
+            ->assertRedirect(ListProducts::class);
+    }
+
+    public function test_can_replicate_product(): void
+    {
+        $user = User::factory()->restaurant()->withRestaurant()->create();
+        $category = ProductCategory::factory()->create(['restaurant_id' => $user->restaurant_id]);
+        $product = Product::factory()->create([
+            'restaurant_id' => $user->restaurant_id,
+            'product_category_id' => $category->id,
+            'name' => 'Original',
+            'price' => 15.00,
+        ]);
+
+        Livewire::actingAs($user)
+            ->test(ListProducts::class)
+            ->callAction(TestAction::make('replicate')->table($product))
+            ->assertNotified();
+
+        $this->assertDatabaseHas(Product::class, [
+            'name' => 'Original (cópia)',
+            'restaurant_id' => $user->restaurant_id,
+            'product_category_id' => $category->id,
+            'price' => 15.00,
+        ]);
+    }
+
+    public function test_same_category_relation_manager_renders(): void
+    {
+        $user = User::factory()->restaurant()->withRestaurant()->create();
+        $category = ProductCategory::factory()->create(['restaurant_id' => $user->restaurant_id]);
+        $product = Product::factory()->create([
+            'restaurant_id' => $user->restaurant_id,
+            'product_category_id' => $category->id,
+            'name' => 'Main Product',
+        ]);
+        $sibling = Product::factory()->create([
+            'restaurant_id' => $user->restaurant_id,
+            'product_category_id' => $category->id,
+            'name' => 'Sibling Product',
+        ]);
+
+        Livewire::actingAs($user)
+            ->test(EditProduct::class, ['record' => $product->id])
+            ->assertSeeLivewire(SameCategoryProductsRelationManager::class);
+
+        Livewire::actingAs($user)
+            ->test(SameCategoryProductsRelationManager::class, [
+                'ownerRecord' => $product,
+                'pageClass' => EditProduct::class,
+            ])
+            ->assertOk()
+            ->assertCanSeeTableRecords([$sibling])
+            ->assertCanNotSeeTableRecords([$product]);
     }
 }

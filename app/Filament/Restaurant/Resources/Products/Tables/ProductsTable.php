@@ -2,9 +2,12 @@
 
 namespace App\Filament\Restaurant\Resources\Products\Tables;
 
+use App\Filament\Restaurant\Resources\Products\ProductResource;
+use App\Models\Product;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ReplicateAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -58,6 +61,17 @@ class ProductsTable
             ])
             ->recordActions([
                 EditAction::make(),
+                ReplicateAction::make()
+                    ->label('Duplicar')
+                    ->requiresConfirmation()
+                    ->modalHeading('Duplicar produto')
+                    ->modalDescription('Deseja criar uma cópia deste produto? O nome será ajustado automaticamente.')
+                    ->excludeAttributes(['created_at', 'updated_at'])
+                    ->beforeReplicaSaved(function (Product $replica): void {
+                        $replica->name = $replica->name.' (cópia)';
+                    })
+                    ->successRedirectUrl(fn (Product $replica): string => ProductResource::getUrl('edit', ['record' => $replica])
+                    ),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

@@ -5,6 +5,8 @@ namespace Tests\Feature\Filament;
 use App\Filament\Restaurant\Resources\ProductCategories\Pages\CreateProductCategory;
 use App\Filament\Restaurant\Resources\ProductCategories\Pages\EditProductCategory;
 use App\Filament\Restaurant\Resources\ProductCategories\Pages\ListProductCategories;
+use App\Filament\Restaurant\Resources\ProductCategories\RelationManagers\ProductsRelationManager;
+use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\Restaurant;
 use App\Models\User;
@@ -122,5 +124,42 @@ class ProductCategoryResourceTest extends TestCase
             ->test(ListProductCategories::class)
             ->assertCanSeeTableRecords([$categoryA])
             ->assertCanNotSeeTableRecords([$categoryB]);
+    }
+
+    public function test_create_redirects_to_index(): void
+    {
+        $user = User::factory()->restaurant()->withRestaurant()->create();
+
+        Livewire::actingAs($user)
+            ->test(CreateProductCategory::class)
+            ->fillForm([
+                'name' => 'New Category',
+                'sort_order' => 1,
+            ])
+            ->call('create')
+            ->assertRedirect(ListProductCategories::class);
+    }
+
+    public function test_products_relation_manager_renders(): void
+    {
+        $user = User::factory()->restaurant()->withRestaurant()->create();
+        $category = ProductCategory::factory()->create(['restaurant_id' => $user->restaurant_id]);
+        $product = Product::factory()->create([
+            'restaurant_id' => $user->restaurant_id,
+            'product_category_id' => $category->id,
+            'name' => 'Category Product',
+        ]);
+
+        Livewire::actingAs($user)
+            ->test(EditProductCategory::class, ['record' => $category->id])
+            ->assertSeeLivewire(ProductsRelationManager::class);
+
+        Livewire::actingAs($user)
+            ->test(ProductsRelationManager::class, [
+                'ownerRecord' => $category,
+                'pageClass' => EditProductCategory::class,
+            ])
+            ->assertOk()
+            ->assertCanSeeTableRecords([$product]);
     }
 }

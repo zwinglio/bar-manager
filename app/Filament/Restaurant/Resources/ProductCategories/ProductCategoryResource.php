@@ -5,6 +5,7 @@ namespace App\Filament\Restaurant\Resources\ProductCategories;
 use App\Filament\Restaurant\Resources\ProductCategories\Pages\CreateProductCategory;
 use App\Filament\Restaurant\Resources\ProductCategories\Pages\EditProductCategory;
 use App\Filament\Restaurant\Resources\ProductCategories\Pages\ListProductCategories;
+use App\Filament\Restaurant\Resources\ProductCategories\RelationManagers\ProductsRelationManager;
 use App\Filament\Restaurant\Resources\ProductCategories\Schemas\ProductCategoryForm;
 use App\Filament\Restaurant\Resources\ProductCategories\Tables\ProductCategoriesTable;
 use App\Models\ProductCategory;
@@ -49,7 +50,7 @@ class ProductCategoryResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            ProductsRelationManager::class,
         ];
     }
 
