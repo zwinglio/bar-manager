@@ -11,6 +11,13 @@
     <body class="bg-stone-50 text-stone-800 antialiased">
         <header class="bg-white shadow-sm">
             <div class="mx-auto max-w-3xl px-4 py-6 text-center">
+                @if ($restaurant->logo_path)
+                    <img
+                        src="{{ Storage::url($restaurant->logo_path) }}"
+                        alt="{{ $restaurant->name }}"
+                        class="mx-auto mb-4 h-20 w-20 rounded-full object-cover"
+                    >
+                @endif
                 <h1 class="text-2xl font-bold tracking-tight text-stone-900">{{ $restaurant->name }}</h1>
                 <p class="mt-1 text-sm text-stone-500">Cardápio</p>
             </div>
@@ -58,5 +65,11 @@
                 <p class="text-center text-stone-500">Nenhum item disponível no cardápio no momento.</p>
             @endforelse
         </main>
+
+        @if ($restaurant->address)
+            <footer class="mt-10 border-t border-stone-200 py-6 text-center text-sm text-stone-500">
+                {{ $restaurant->address }}
+            </footer>
+        @endif
     </body>
 </html>
