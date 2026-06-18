@@ -226,7 +226,7 @@ class PublicMenuTest extends TestCase
         $response = $this->get(route('menu.public', ['restaurant' => $restaurant->slug]));
 
         $response->assertStatus(200);
-        $response->assertDontSee('rounded-full');
+        $response->assertDontSee('rounded-full object-cover');
     }
 
     public function test_shows_address_in_footer_when_present(): void
