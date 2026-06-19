@@ -7,6 +7,7 @@ use App\Models\Restaurant;
 use App\Models\Waiter;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -27,13 +28,12 @@ class AuthController
             ->where('is_active', true)
             ->first();
 
-        if (! $waiter) {
+        if (! $waiter || ! Hash::check($request->input('password'), $waiter->password)) {
             return redirect()
                 ->route('waiter.login', ['restaurant' => $restaurant->slug])
-                ->withErrors(['username' => 'Invalid username.']);
+                ->withErrors(['username' => 'Usuário ou senha inválidos.']);
         }
 
-        // TODO: add password check when passwords are introduced
         Auth::guard('waiter')->login($waiter);
 
         return redirect()->route('waiter.tables.index', ['restaurant' => $restaurant->slug]);

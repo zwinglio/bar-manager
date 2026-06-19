@@ -2,9 +2,11 @@
 
 namespace App\Http\Waiter\Requests;
 
+use App\Enums\PaymentMethod;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class LoginRequest extends FormRequest
+class CloseTableRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -17,8 +19,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => ['required', 'string', 'max:255'],
-            'password' => ['required', 'string'],
+            'payment_method' => ['required', Rule::enum(PaymentMethod::class)],
         ];
     }
 }

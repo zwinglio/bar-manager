@@ -45,6 +45,7 @@ const vuetify = createVuetify({
     defaults: {
         global: {
             rounded: 'lg',
+            density: 'comfortable',
         },
         VBtn: {
             style: {

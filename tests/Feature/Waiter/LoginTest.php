@@ -26,10 +26,30 @@ class LoginTest extends TestCase
 
         $response = $this->post(route('waiter.login.attempt', ['restaurant' => $restaurant->slug]), [
             'username' => 'nonexistent',
+            'password' => 'password',
         ]);
 
         $response->assertRedirect(route('waiter.login', ['restaurant' => $restaurant->slug]));
         $response->assertSessionHasErrors(['username']);
+    }
+
+    public function test_wrong_password_fails(): void
+    {
+        $restaurant = Restaurant::factory()->create();
+        Waiter::factory()->create([
+            'restaurant_id' => $restaurant->id,
+            'username' => 'joao',
+            'is_active' => true,
+        ]);
+
+        $response = $this->post(route('waiter.login.attempt', ['restaurant' => $restaurant->slug]), [
+            'username' => 'joao',
+            'password' => 'wrong-password',
+        ]);
+
+        $response->assertRedirect(route('waiter.login', ['restaurant' => $restaurant->slug]));
+        $response->assertSessionHasErrors(['username']);
+        $this->assertGuest('waiter');
     }
 
     public function test_valid_username_logs_in(): void
@@ -43,6 +63,7 @@ class LoginTest extends TestCase
 
         $response = $this->post(route('waiter.login.attempt', ['restaurant' => $restaurant->slug]), [
             'username' => 'joao',
+            'password' => 'password',
         ]);
 
         $response->assertRedirect(route('waiter.tables.index', ['restaurant' => $restaurant->slug]));
@@ -61,6 +82,7 @@ class LoginTest extends TestCase
 
         $response = $this->post(route('waiter.login.attempt', ['restaurant' => $restaurant->slug]), [
             'username' => 'joao',
+            'password' => 'password',
         ]);
 
         $response->assertRedirect(route('waiter.login', ['restaurant' => $restaurant->slug]));
@@ -71,7 +93,7 @@ class LoginTest extends TestCase
     public function test_cross_restaurant_slug_rejected(): void
     {
         $restaurantA = Restaurant::factory()->create();
-        $waiter = Waiter::factory()->create([
+        Waiter::factory()->create([
             'restaurant_id' => $restaurantA->id,
             'username' => 'joao',
             'is_active' => true,
@@ -81,6 +103,7 @@ class LoginTest extends TestCase
 
         $this->post(route('waiter.login.attempt', ['restaurant' => $restaurantA->slug]), [
             'username' => 'joao',
+            'password' => 'password',
         ]);
         $this->assertAuthenticated('waiter');
 

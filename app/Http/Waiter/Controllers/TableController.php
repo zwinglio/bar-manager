@@ -2,6 +2,8 @@
 
 namespace App\Http\Waiter\Controllers;
 
+use App\Enums\PaymentMethod;
+use App\Http\Waiter\Requests\CloseTableRequest;
 use App\Http\Waiter\Requests\OpenTableRequest;
 use App\Models\Restaurant;
 use App\Models\RestaurantTable;
@@ -152,7 +154,7 @@ class TableController
         ]);
     }
 
-    public function close(Restaurant $restaurant, RestaurantTable $table): RedirectResponse
+    public function close(CloseTableRequest $request, Restaurant $restaurant, RestaurantTable $table): RedirectResponse
     {
         if (! $table->isOpen()) {
             return redirect()->route('waiter.tables.show', [
@@ -161,7 +163,7 @@ class TableController
             ]);
         }
 
-        $table->close();
+        $table->close(PaymentMethod::from($request->validated('payment_method')));
 
         return redirect()->route('waiter.tables.index', ['restaurant' => $restaurant->slug]);
     }

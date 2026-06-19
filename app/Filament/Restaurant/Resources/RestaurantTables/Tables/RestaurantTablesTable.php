@@ -2,11 +2,13 @@
 
 namespace App\Filament\Restaurant\Resources\RestaurantTables\Tables;
 
+use App\Enums\PaymentMethod;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -82,8 +84,15 @@ class RestaurantTablesTable
                 Action::make('close')
                     ->visible(fn ($record) => $record->isOpen())
                     ->requiresConfirmation()
-                    ->action(function ($record) {
-                        $record->close();
+                    ->schema([
+                        Select::make('payment_method')
+                            ->label('Forma de pagamento')
+                            ->options(collect(PaymentMethod::cases())->mapWithKeys(fn (PaymentMethod $m) => [$m->value => $m->label()]))
+                            ->required()
+                            ->native(false),
+                    ])
+                    ->action(function ($record, array $data) {
+                        $record->close(PaymentMethod::from($data['payment_method']));
 
                         Notification::make()
                             ->success()

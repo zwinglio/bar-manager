@@ -4,9 +4,9 @@
             <!-- Header -->
             <div class="d-flex align-center justify-space-between mb-6">
                 <div>
-                    <h1 class="text-h6 font-weight-bold text-on-surface">
+                    <h3 class="text-subtitle-1 font-weight-bold text-on-surface">
                         Boa noite, {{ waiter.name }}
-                    </h1>
+                    </h3>
                 </div>
                 <div class="d-flex align-center gap-2">
                     <v-avatar
@@ -80,29 +80,25 @@
             <!-- Sticky bottom CTA -->
             <div
                 v-if="scope !== 'closed'"
-                class="sticky-bottom pa-4"
+                class="sticky-bottom py-4"
                 style="position: sticky; bottom: 0; z-index: 10;"
             >
-                <Link
-                    :href="route('waiter.tables.create', { restaurant: restaurant.slug })"
-                    class="text-decoration-none"
+                <v-btn
+                    color="primary"
+                    block
+                    size="large"
+                    prepend-icon="mdi-plus"
+                    @click="$inertia.visit(route('waiter.tables.create', { restaurant: restaurant.slug }))"
                 >
-                    <v-btn
-                        color="primary"
-                        block
-                        size="large"
-                        prepend-icon="mdi-plus"
-                    >
-                        Abrir mesa
-                    </v-btn>
-                </Link>
+                    Abrir mesa
+                </v-btn>
             </div>
         </v-container>
     </WaiterLayout>
 </template>
 
 <script setup>
-import { Link, router, useForm } from '@inertiajs/vue3';
+import { router, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import WaiterLayout from '../../Layouts/WaiterLayout.vue';
 import TableCard from '../../components/TableCard.vue';

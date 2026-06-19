@@ -17,10 +17,20 @@
                         autofocus
                     />
 
+                    <v-text-field
+                        v-model="form.password"
+                        type="password"
+                        label="Senha"
+                        variant="outlined"
+                        :error-messages="form.errors.password"
+                        required
+                    />
+
                     <v-btn
                         type="submit"
                         color="primary"
                         block
+                        size="large"
                         :loading="form.processing"
                     >
                         Entrar
@@ -41,6 +51,7 @@ const props = defineProps({
 
 const form = useForm({
     username: '',
+    password: '',
 });
 
 function submit() {

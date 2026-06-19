@@ -2,13 +2,14 @@
     <WaiterLayout>
         <v-container>
             <div class="d-flex align-center mb-6">
-                <Link
-                    :href="route('waiter.tables.index', { restaurant: restaurant.slug })"
-                    class="text-body-2 text-medium-emphasis mr-4 text-decoration-none"
-                >
-                    &larr; Voltar
-                </Link>
-                <h1 class="text-h6 font-weight-bold">Abrir Mesa</h1>
+                <v-btn
+                    variant="tonal"
+                    color="on-surface"
+                    icon="mdi-arrow-left"
+                    class="mr-2"
+                    @click="$inertia.visit(route('waiter.tables.index', { restaurant: restaurant.slug }))"
+                ></v-btn>
+                <h2 class="font-weight-bold">Abrir Mesa</h2>
             </div>
 
             <v-form @submit.prevent="submit">
@@ -51,6 +52,7 @@
                     type="submit"
                     color="primary"
                     block
+                    size="large"
                     :loading="form.processing"
                 >
                     Abrir mesa
@@ -61,7 +63,7 @@
 </template>
 
 <script setup>
-import { Link, useForm } from '@inertiajs/vue3';
+import { useForm } from '@inertiajs/vue3';
 import WaiterLayout from '../../Layouts/WaiterLayout.vue';
 
 const props = defineProps({

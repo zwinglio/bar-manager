@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Filament;
 
+use App\Enums\PaymentMethod;
 use App\Filament\Restaurant\Resources\RestaurantTables\Pages\CreateRestaurantTable;
 use App\Filament\Restaurant\Resources\RestaurantTables\Pages\EditRestaurantTable;
 use App\Filament\Restaurant\Resources\RestaurantTables\Pages\ListRestaurantTables;
@@ -143,7 +144,7 @@ class RestaurantTableResourceTest extends TestCase
 
         $this->assertTrue($table->isOpen());
 
-        $table->close();
+        $table->close(PaymentMethod::Pix);
         $table->refresh();
 
         $this->assertNotNull($table->closed_at);
@@ -233,13 +234,16 @@ class RestaurantTableResourceTest extends TestCase
 
         Livewire::actingAs($user)
             ->test(ListRestaurantTables::class)
-            ->callAction(TestAction::make('close')->table($table))
+            ->callAction(TestAction::make('close')->table($table), data: [
+                'payment_method' => PaymentMethod::Pix->value,
+            ])
             ->assertNotified();
 
         $table->refresh();
 
         $this->assertNotNull($table->closed_at);
         $this->assertEquals(30.00, (float) $table->total);
+        $this->assertEquals(PaymentMethod::Pix, $table->payment_method);
     }
 
     public function test_scoped_to_user_restaurant(): void

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentMethod;
 use Database\Factories\RestaurantTableFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'opened_at',
     'closed_at',
     'total',
+    'payment_method',
 ])]
 class RestaurantTable extends Model
 {
@@ -39,6 +41,7 @@ class RestaurantTable extends Model
             'total' => 'decimal:2',
             'person_count' => 'integer',
             'number' => 'integer',
+            'payment_method' => PaymentMethod::class,
         ];
     }
 
@@ -79,10 +82,11 @@ class RestaurantTable extends Model
         return $this->closed_at === null;
     }
 
-    public function close(): void
+    public function close(PaymentMethod $paymentMethod): void
     {
         $this->closed_at = now();
         $this->total = $this->current_total;
+        $this->payment_method = $paymentMethod;
         $this->save();
     }
 }
