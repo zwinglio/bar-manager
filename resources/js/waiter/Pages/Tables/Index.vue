@@ -51,25 +51,36 @@
                 >
                     <span class="font-weight-medium">{{ tab.label }}</span>
                     <v-chip
-                        v-if="scope === tab.value && tables.length > 0"
+                        v-if="scope === tab.value && filteredTables.length > 0"
                         color="white"
                         size="small"
                         class="ml-2 font-weight-bold"
                         label
                     >
-                        {{ tables.length }}
+                        {{ filteredTables.length }}
                     </v-chip>
                 </v-btn>
             </div>
 
+            <!-- Search -->
+            <v-text-field
+                v-model="search"
+                label="Buscar por nome ou número..."
+                variant="outlined"
+                density="compact"
+                prepend-inner-icon="mdi-magnify"
+                hide-details
+                class="mb-4"
+            />
+
             <v-empty-state
-                v-if="tables.length === 0"
-                :headline="scope === 'closed' ? 'Nenhuma mesa fechada.' : 'Nenhuma mesa aberta.'"
+                v-if="filteredTables.length === 0"
+                :headline="search ? 'Nenhuma mesa encontrada.' : (scope === 'closed' ? 'Nenhuma mesa fechada.' : 'Nenhuma mesa aberta.')"
             />
 
             <div v-else>
                 <TableCard
-                    v-for="table in tables"
+                    v-for="table in filteredTables"
                     :key="table.id"
                     :table="table"
                     :restaurant-slug="restaurant.slug"
@@ -99,7 +110,7 @@
 
 <script setup>
 import { router, useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import WaiterLayout from '../../Layouts/WaiterLayout.vue';
 import TableCard from '../../components/TableCard.vue';
 
@@ -111,6 +122,20 @@ const props = defineProps({
 });
 
 const scope = ref(props.scope);
+const search = ref('');
+
+const filteredTables = computed(() => {
+    const term = search.value.trim().toLowerCase();
+
+    if (!term) {
+        return props.tables;
+    }
+
+    return props.tables.filter((table) => {
+        return String(table.number).includes(term)
+            || (table.name ?? '').toLowerCase().includes(term);
+    });
+});
 
 const tabs = [
     { value: 'mine', label: 'Abertas' },

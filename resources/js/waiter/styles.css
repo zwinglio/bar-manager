@@ -1,0 +1,11 @@
+/* Utility classes shared across waiter components */
+
+.min-width-0 {
+    min-width: 0;
+}
+
+.truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

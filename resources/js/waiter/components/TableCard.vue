@@ -22,6 +22,12 @@
 
                     <!-- Info -->
                     <div class="flex-grow-1 min-width-0">
+                        <div
+                            v-if="table.name"
+                            class="text-body-2 font-weight-medium text-on-surface mb-1 truncate"
+                        >
+                            {{ table.name }}
+                        </div>
                         <div class="d-flex align-center mb-1">
                             <v-icon
                                 icon="mdi-circle-small"
@@ -76,6 +82,12 @@
 
                     <!-- Info -->
                     <div class="flex-grow-1 min-width-0">
+                        <div
+                            v-if="table.name"
+                            class="text-body-2 font-weight-medium text-on-surface mb-1 truncate"
+                        >
+                            {{ table.name }}
+                        </div>
                         <div class="d-flex align-center mb-1">
                             <v-icon
                                 icon="mdi-circle-small"

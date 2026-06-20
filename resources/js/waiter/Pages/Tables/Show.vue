@@ -346,12 +346,6 @@ function addProduct(productId) {
 </script>
 
 <style scoped>
-.truncate {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
 .opacity-80 {
     opacity: 0.8;
 }
