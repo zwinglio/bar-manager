@@ -5,6 +5,7 @@ namespace App\Filament\Restaurant\Resources\RestaurantTables;
 use App\Filament\Restaurant\Resources\RestaurantTables\Pages\CreateRestaurantTable;
 use App\Filament\Restaurant\Resources\RestaurantTables\Pages\EditRestaurantTable;
 use App\Filament\Restaurant\Resources\RestaurantTables\Pages\ListRestaurantTables;
+use App\Filament\Restaurant\Resources\RestaurantTables\RelationManagers\ProductsRelationManager;
 use App\Filament\Restaurant\Resources\RestaurantTables\Schemas\RestaurantTableForm;
 use App\Filament\Restaurant\Resources\RestaurantTables\Tables\RestaurantTablesTable;
 use App\Models\RestaurantTable;
@@ -49,7 +50,7 @@ class RestaurantTableResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            ProductsRelationManager::class,
         ];
     }
 

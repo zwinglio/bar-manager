@@ -14,6 +14,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -50,19 +51,23 @@ class RestaurantTablesTable
                 TextColumn::make('total')
                     ->money('BRL')
                     ->label('Total final'),
+                TextColumn::make('payment_method')
+                    ->label('Pagamento')
+                    ->badge()
+                    ->formatStateUsing(fn (?PaymentMethod $state): string => $state?->label() ?? '—')
+                    ->placeholder('—'),
             ])
             ->filters([
-                SelectFilter::make('status')
-                    ->label('Status')
-                    ->options([
-                        'open' => 'Aberta',
-                        'closed' => 'Fechada',
-                    ])
-                    ->query(fn (Builder $query, array $data): Builder => match ($data['value'] ?? null) {
-                        'open' => $query->whereNull('closed_at'),
-                        'closed' => $query->whereNotNull('closed_at'),
-                        default => $query,
-                    }),
+                TernaryFilter::make('status')
+                    ->label('Apenas abertas')
+                    ->trueLabel('Aberta')
+                    ->falseLabel('Fechada')
+                    ->placeholder('Todas')
+                    ->queries(
+                        true: fn (Builder $query): Builder => $query->whereNull('closed_at'),
+                        false: fn (Builder $query): Builder => $query->whereNotNull('closed_at'),
+                        blank: fn (Builder $query): Builder => $query,
+                    ),
                 Filter::make('opened_at')
                     ->label('Data de abertura')
                     ->schema([
@@ -78,6 +83,9 @@ class RestaurantTablesTable
                     ->label('Garçom')
                     ->relationship('waiter', 'name')
                     ->preload(),
+                SelectFilter::make('payment_method')
+                    ->label('Forma de pagamento')
+                    ->options(collect(PaymentMethod::cases())->mapWithKeys(fn (PaymentMethod $m) => [$m->value => $m->label()])),
             ])
             ->recordActions([
                 EditAction::make(),
